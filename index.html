@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brasileirão Série A 2026 — SWI-Prolog Intelligence</title>
+    <!-- Fonts Google: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-main: #080c15;
+            --bg-card: #0f172a;
+            --bg-card-elevated: #141f36;
+            --bg-card-hover: #192642;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            --emerald: #10b981;
+            --emerald-bg: rgba(16, 185, 129, 0.1);
+            --emerald-border: rgba(16, 185, 129, 0.25);
+            
+            --blue: #38bdf8;
+            --blue-bg: rgba(56, 189, 248, 0.1);
+            --blue-border: rgba(56, 189, 248, 0.25);
+            
+            --rose: #f43f5e;
+            --rose-bg: rgba(244, 63, 94, 0.1);
+            --rose-border: rgba(244, 63, 94, 0.25);
+
+            --purple: #a855f7;
+            --purple-bg: rgba(168, 85, 247, 0.1);
+            --purple-border: rgba(168, 85, 247, 0.25);
+            
+            --amber: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 32px 20px;
+            background-image: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.08), transparent 70%),
+                radial-gradient(ellipse 60% 40% at 90% 10%, rgba(56, 189, 248, 0.05), transparent 60%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        /* Top Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 28px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.4);
+            flex-shrink: 0;
+        }
+
+        .brand-text h1 {
+            font-size: 1.55rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .season-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--emerald);
+            border: 1px solid var(--emerald-border);
+            letter-spacing: 0.05em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            border-radius: 100px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--emerald);
+            box-shadow: 0 0 10px var(--emerald);
+            animation: pulse-dot 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        .leader-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            border-radius: 100px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 95, 70, 0.25) 100%);
+            border: 1px solid var(--emerald-border);
+            color: #d1fae5;
+            font-size: 0.86rem;
+            font-weight: 700;
+        }
+
+        .leader-card svg {
+            color: var(--emerald);
+        }
+
+        /* KPI Cards Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+
+        .kpi-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            background: var(--bg-card-elevated);
+        }
+
+        .kpi-info span {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.76rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .kpi-info strong {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+
+        .kpi-info small {
+            display: block;
+            margin-top: 4px;
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+        }
+
+        .kpi-icon-wrap {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card-elevated);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .kpi-icon-wrap.emerald { color: var(--emerald); background: var(--emerald-bg); border-color: var(--emerald-border); }
+        .kpi-icon-wrap.blue { color: var(--blue); background: var(--blue-bg); border-color: var(--blue-border); }
+        .kpi-icon-wrap.purple { color: var(--purple); background: var(--purple-bg); border-color: var(--purple-border); }
+        .kpi-icon-wrap.amber { color: var(--amber); background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.25); }
+
+        /* Navigation Tabs (Segmented Control) */
+        .tabs-container {
+            display: flex;
+            gap: 6px;
+            background: var(--bg-card);
+            padding: 5px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+
+        .tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            padding: 8px 18px;
+            border: none;
+            border-radius: 7px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .tab-btn.active {
+            background: #ffffff;
+            color: #090d16;
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn.active svg {
+            color: #090d16;
+        }
+
+        /* Controls & Filter Bar */
+        .filters-toolbar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .filter-buttons-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 13px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card-elevated);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .filter-chip svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .filter-chip:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+        }
+
+        .filter-chip.active {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--emerald);
+            color: #ffffff;
+        }
+
+        .filter-chip.active svg {
+            color: var(--emerald);
+        }
+
+        .filter-selects-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .search-box-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box-wrap svg {
+            position: absolute;
+            left: 11px;
+            width: 15px;
+            height: 15px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-input {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 7px 12px 7px 34px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            outline: none;
+            width: 180px;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--emerald);
+            width: 210px;
+        }
+
+        .select-custom {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .select-custom:focus {
+            border-color: var(--emerald);
+        }
+
+        /* Prolog Query Box (Modern Terminal Inspector) */
+        .prolog-terminal {
+            background: #05080e;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 18px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .terminal-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            font-size: 0.88rem;
+        }
+
+        .terminal-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .terminal-code {
+            color: #e2e8f0;
+        }
+
+        .terminal-code .prompt { color: var(--blue); font-weight: 700; margin-right: 4px; }
+        .terminal-code .predicate { color: #34d399; font-weight: 600; }
+        .terminal-code .args { color: #fde047; }
+
+        .terminal-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Error Notification */
+        .error-alert {
+            background: rgba(244, 63, 94, 0.12);
+            border: 1px solid var(--rose-border);
+            color: #fecdd3;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.88rem;
+        }
+
+        .error-alert svg {
+            color: var(--rose);
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Data Tables */
+        .table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            text-align: left;
+        }
+
+        thead tr {
+            background: #090f1d;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            padding: 13px 16px;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.74rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        th.center, td.center { text-align: center; }
+        th.right, td.right { text-align: right; }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: background-color 0.15s ease;
+        }
+
+        tbody tr:hover {
+            background-color: var(--bg-card-hover);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 14px 16px;
+            color: #cbd5e1;
+            white-space: nowrap;
+        }
+
+        /* Club Row & Badges */
+        .pos-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid transparent;
+        }
+
+        .pos-g6 {
+            background: var(--emerald-bg);
+            color: #34d399;
+            border-color: var(--emerald-border);
+        }
+
+        .pos-sula {
+            background: var(--blue-bg);
+            color: var(--blue);
+            border-color: var(--blue-border);
+        }
+
+        .pos-z4 {
+            background: var(--rose-bg);
+            color: #fb7185;
+            border-color: var(--rose-border);
+        }
+
+        .pos-neutro {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            border-color: rgba(255, 255, 255, 0.06);
+        }
+
+        .club-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .club-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--bg-card-elevated);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.03em;
+            flex-shrink: 0;
+        }
+
+        .club-name {
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 0.94rem;
+        }
+
+        .uf-pill {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .pts-value {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--emerald);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .num-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            font-weight: 500;
+        }
+
+        .sg-positive {
+            color: #34d399;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .sg-negative {
+            color: #fb7185;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .sg-zero {
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Highlights for Leader */
+        tr.is-leader {
+            background: rgba(16, 185, 129, 0.06);
+        }
+
+        /* Table Footer Legend */
+        .table-legend {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: #090f1d;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .legend-items {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .legend-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-tag .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .legend-tag .dot.g6 { background: var(--emerald); }
+        .legend-tag .dot.sula { background: var(--blue); }
+        .legend-tag .dot.z4 { background: var(--rose); }
+
+        /* Empty State & Loader */
+        .loading-row td, .empty-row td {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--emerald);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 16px 12px; }
+            .header { flex-direction: column; align-items: flex-start; }
+            .tabs-container { width: 100%; overflow-x: auto; }
+            .filters-toolbar { flex-direction: column; align-items: stretch; }
+            .search-input { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <header class="header">
+        <div class="brand-group">
+            <div class="logo-box">
+                <i data-lucide="shield"></i>
+            </div>
+            <div class="brand-text">
+                <h1>
+                    Brasileirão Série A
+                    <span class="season-badge">2026</span>
+                </h1>
+                <p class="subtitle">
+                    <i data-lucide="cpu" style="width: 14px; height: 14px;"></i>
+                    Motor Lógico SWI-Prolog • Rodada 32 de 38
+                </p>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <div class="status-pill" id="swiplStatusPill">
+                <span class="status-dot"></span>
+                <span id="swiplStatusText">SWI-Prolog Conectado</span>
+            </div>
+            <div class="leader-card">
+                <i data-lucide="award" style="width: 16px; height: 16px;"></i>
+                <span>Líder: Palmeiras (70 pts)</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Top KPI Metric Cards -->
+    <section class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-info">
+                <span>Líder Isolado</span>
+                <strong>Palmeiras</strong>
+                <small>70 Pontos • 21 Vitórias • SG +37</small>
+            </div>
+            <div class="kpi-icon-wrap emerald">
+                <i data-lucide="trophy"></i>
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-info">
+                <span>Zona Libertadores</span>
+                <strong>G6 Garantido</strong>
+                <small>Palmeiras, Fla, Cruzeiro, CAP, Flu, Galo</small>
+            </div>
+            <div class="kpi-icon-wrap blue">
+                <i data-lucide="compass"></i>
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-info">
+                <span>Artilheiro do Torneio</span>
+                <strong>Kevin Viveros</strong>
+                <small>21 Gols • Athletico-PR</small>
+            </div>
+            <div class="kpi-icon-wrap amber">
+                <i data-lucide="flame"></i>
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-info">
+                <span>Líder de Assistências</span>
+                <strong>Andreas Pereira</strong>
+                <small>12 Assistências • Palmeiras</small>
+            </div>
+            <div class="kpi-icon-wrap purple">
+                <i data-lucide="sparkles"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Segmented Navigation Tabs -->
+    <div class="tabs-container">
+        <button id="tabTimes" class="tab-btn active" onclick="mudarAba('times')">
+            <i data-lucide="table"></i>
+            Classificação Geral
+        </button>
+        <button id="tabGols" class="tab-btn" onclick="mudarAba('artilheiros')">
+            <i data-lucide="flame"></i>
+            Artilharia (Gols)
+        </button>
+        <button id="tabAssis" class="tab-btn" onclick="mudarAba('assistentes')">
+            <i data-lucide="sparkles"></i>
+            Líderes de Assistências
+        </button>
+    </div>
+
+    <!-- Filter & Search Toolbar (Only for Clubs Tab) -->
+    <div id="controlesTimes" class="filters-toolbar">
+        <div class="filter-buttons-group">
+            <button class="filter-chip active" id="btn-all" onclick="filtrarTabela('todos', '', this)">
+                <i data-lucide="layers"></i>
+                Tabela Completa (20)
+            </button>
+            <button class="filter-chip" id="btn-lib" onclick="filtrarTabela('libertadores', '', this)">
+                <i data-lucide="shield-check"></i>
+                Libertadores (G6)
+            </button>
+            <button class="filter-chip" id="btn-sula" onclick="filtrarTabela('sulamericana', '', this)">
+                <i data-lucide="globe"></i>
+                Sul-Americana (7º ao 12º)
+            </button>
+            <button class="filter-chip" id="btn-z4" onclick="filtrarTabela('rebaixamento', '', this)">
+                <i data-lucide="alert-triangle"></i>
+                Zona de Rebaixamento (Z4)
+            </button>
+            <button class="filter-chip" id="btn-sg" onclick="filtrarTabela('saldo_positivo', '', this)">
+                <i data-lucide="trending-up"></i>
+                Saldo Positivo
+            </button>
+        </div>
+
+        <div class="filter-selects-group">
+            <div class="search-box-wrap">
+                <i data-lucide="search"></i>
+                <input type="text" id="inputBusca" class="search-input" placeholder="Buscar clube..." oninput="filtrarPorTexto(this.value)">
+            </div>
+
+            <select id="selectUF" class="select-custom" onchange="if(this.value) { filtrarTabela('estado', this.value, null); this.value=''; }">
+                <option value="">Filtrar por UF...</option>
+                <option value="SP">São Paulo (SP)</option>
+                <option value="RJ">Rio de Janeiro (RJ)</option>
+                <option value="MG">Minas Gerais (MG)</option>
+                <option value="PR">Paraná (PR)</option>
+                <option value="RS">Rio Grande do Sul (RS)</option>
+                <option value="BA">Bahia (BA)</option>
+                <option value="SC">Santa Catarina (SC)</option>
+                <option value="PA">Pará (PA)</option>
+            </select>
+
+            <select id="selectRegiao" class="select-custom" onchange="if(this.value) { filtrarTabela('regiao', this.value, null); this.value=''; }">
+                <option value="">Filtrar por Região...</option>
+                <option value="Sudeste">Sudeste</option>
+                <option value="Sul">Sul</option>
+                <option value="Nordeste">Nordeste</option>
+                <option value="Norte">Norte</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Prolog Query Terminal Inspector -->
+    <div class="prolog-terminal">
+        <div class="terminal-content">
+            <span class="terminal-badge">
+                <i data-lucide="terminal" style="width: 12px; height: 12px;"></i>
+                Query SWI-Prolog
+            </span>
+            <div class="terminal-code">
+                <span class="prompt">?-</span>
+                <span id="prologQueryCode" class="predicate">todos_times(Pos, Nome, UF, Regiao, Pts, J, V, E, D, GP, GC, SG).</span>
+            </div>
+        </div>
+        <div class="terminal-actions">
+            <button class="copy-btn" onclick="copiarQuery()">
+                <i data-lucide="copy" id="copyIcon" style="width: 13px; height: 13px;"></i>
+                <span id="copyText">Copiar Query</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Error Alert Box -->
+    <div id="caixaErro" class="error-alert">
+        <i data-lucide="alert-octagon"></i>
+        <div id="mensagemErro">Ocorreu um erro ao consultar o motor SWI-Prolog.</div>
+    </div>
+
+    <!-- Main Data Table Container -->
+    <div class="table-card">
+        <div class="table-responsive">
+            <!-- Table: Clubes -->
+            <table id="tabelaClubes">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;" class="center">Pos</th>
+                        <th>Clube</th>
+                        <th class="center" style="width: 70px;">UF</th>
+                        <th style="width: 110px;">Região</th>
+                        <th class="center" style="width: 80px;">PTS</th>
+                        <th class="center" style="width: 60px;">PJ</th>
+                        <th class="center" style="width: 60px;">VIT</th>
+                        <th class="center" style="width: 60px;">E</th>
+                        <th class="center" style="width: 60px;">DER</th>
+                        <th class="center" style="width: 60px;">GP</th>
+                        <th class="center" style="width: 60px;">GC</th>
+                        <th class="center" style="width: 70px;">SG</th>
+                        <th class="right" style="width: 90px;">Aprov.</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoClubes"></tbody>
+            </table>
+
+            <!-- Table: Jogadores (Artilharia & Assistências) -->
+            <table id="tabelaJogadores" style="display: none;">
+                <thead>
+                    <tr>
+                        <th style="width: 70px;" class="center">Pos</th>
+                        <th>Jogador</th>
+                        <th>Clube Pertencente</th>
+                        <th id="colunaEstatistica" class="right" style="width: 140px;">Gols Marcados</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoJogadores"></tbody>
+            </table>
+        </div>
+
+        <!-- Table Legend Footer -->
+        <div class="table-legend">
+            <div class="legend-items">
+                <span class="legend-tag">
+                    <span class="dot g6"></span>
+                    Libertadores (G6)
+                </span>
+                <span class="legend-tag">
+                    <span class="dot sula"></span>
+                    Sul-Americana (7º ao 12º)
+                </span>
+                <span class="legend-tag">
+                    <span class="dot z4"></span>
+                    Zona de Rebaixamento (Z4)
+                </span>
+            </div>
+            <div id="totalRegistrosTexto">Carregando dados...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let dadosAtuaisTimes = [];
+    let queryAtualTexto = "todos_times(Pos, Nome, UF, Regiao, Pts, J, V, E, D, GP, GC, SG).";
+
+    // Monogramas dos clubes para avatares limpos
+    const siglasClubes = {
+        'Palmeiras': 'PAL',
+        'Flamengo': 'FLA',
+        'Cruzeiro': 'CRU',
+        'Athletico-PR': 'CAP',
+        'Fluminense': 'FLU',
+        'Atletico-MG': 'CAM',
+        'Bahia': 'BAH',
+        'Santos': 'SAN',
+        'Sao Paulo': 'SAO',
+        'Bragantino': 'RBB',
+        'Botafogo': 'BOT',
+        'Coritiba': 'CFC',
+        'Vasco da Gama': 'VAS',
+        'EC Vitoria': 'VIT',
+        'Mirassol': 'MIR',
+        'Internacional': 'INT',
+        'Gremio': 'GRE',
+        'Corinthians': 'COR',
+        'Remo': 'REM',
+        'Chapecoense': 'CHA'
+    };
+
+    function classePosicao(pos) {
+        if (pos <= 6) return 'pos-g6';
+        if (pos <= 12) return 'pos-sula';
+        if (pos >= 17) return 'pos-z4';
+        return 'pos-neutro';
+    }
+
+    function atualizarLucide() {
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    }
+
+    async function verificarInfoMotor() {
+        try {
+            const res = await fetch('/api/info');
+            const data = await res.json();
+            const pillText = document.getElementById('swiplStatusText');
+            if (data.prolog_ativo) {
+                pillText.textContent = data.versao.replace('for x64-win64', '').trim();
+            } else {
+                pillText.textContent = 'SWI-Prolog Inativo';
+            }
+        } catch (e) {
+            console.warn('Não foi possível obter versão do Prolog:', e);
+        }
+    }
+
+    function mudarAba(aba) {
+        document.getElementById('tabTimes').classList.toggle('active', aba === 'times');
+        document.getElementById('tabGols').classList.toggle('active', aba === 'artilheiros');
+        document.getElementById('tabAssis').classList.toggle('active', aba === 'assistentes');
+
+        const controlesTimes = document.getElementById('controlesTimes');
+        const tabelaClubes = document.getElementById('tabelaClubes');
+        const tabelaJogadores = document.getElementById('tabelaJogadores');
+
+        if (aba === 'times') {
+            controlesTimes.style.display = 'flex';
+            tabelaClubes.style.display = 'table';
+            tabelaJogadores.style.display = 'none';
+            consultarTimes('todos');
+        } else {
+            controlesTimes.style.display = 'none';
+            tabelaClubes.style.display = 'none';
+            tabelaJogadores.style.display = 'table';
+            consultarJogadores(aba);
+        }
+        atualizarLucide();
+    }
+
+    function filtrarTabela(tipo, valor, botaoAtivo) {
+        // Atualiza estilo dos chips
+        if (botaoAtivo) {
+            document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+            botaoAtivo.classList.add('active');
+        } else {
+            document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+        }
+        document.getElementById('inputBusca').value = '';
+        consultarTimes(tipo, valor);
+    }
+
+    function setTerminalQuery(query) {
+        queryAtualTexto = query;
+        const codeElem = document.getElementById('prologQueryCode');
+        codeElem.textContent = query;
+    }
+
+    async function consultarTimes(tipo, valor = '') {
+        const erroDiv = document.getElementById('caixaErro');
+        const msgErro = document.getElementById('mensagemErro');
+        const corpo = document.getElementById('corpoClubes');
+        const totalTexto = document.getElementById('totalRegistrosTexto');
+
+        erroDiv.style.display = 'none';
+        corpo.innerHTML = '<tr class="loading-row"><td colspan="13"><div class="spinner"></div> Executando motor lógico SWI-Prolog...</td></tr>';
+
+        try {
+            const url = `/api/times?tipo=${encodeURIComponent(tipo)}&valor=${encodeURIComponent(valor)}`;
+            const res = await fetch(url);
+            const json = await res.json();
+
+            if (!json.sucesso) {
+                msgErro.textContent = json.erro;
+                erroDiv.style.display = 'flex';
+                corpo.innerHTML = '<tr class="empty-row"><td colspan="13">Falha ao consultar Prolog.</td></tr>';
+                atualizarLucide();
+                return;
+            }
+
+            setTerminalQuery(json.query_prolog);
+            dadosAtuaisTimes = json.dados;
+            renderizarTabelaClubes(dadosAtuaisTimes);
+            totalTexto.textContent = `Mostrando ${json.dados.length} clubes cadastrados`;
+        } catch (err) {
+            msgErro.textContent = 'Erro de conexão com o servidor Flask local.';
+            erroDiv.style.display = 'flex';
+            corpo.innerHTML = '<tr class="empty-row"><td colspan="13">Erro de comunicação com a API.</td></tr>';
+            atualizarLucide();
+        }
+    }
+
+    function renderizarTabelaClubes(times) {
+        const corpo = document.getElementById('corpoClubes');
+        corpo.innerHTML = '';
+
+        if (!times || times.length === 0) {
+            corpo.innerHTML = '<tr class="empty-row"><td colspan="13">Nenhum clube encontrado para o filtro aplicado.</td></tr>';
+            return;
+        }
+
+        times.forEach(t => {
+            const sigla = siglasClubes[t.nome] || t.nome.substring(0, 3).toUpperCase();
+            const aproveitamento = ((t.pontos / (t.jogos * 3)) * 100).toFixed(1);
+            
+            let sgHtml = `<span class="sg-zero">0</span>`;
+            if (t.sg > 0) {
+                sgHtml = `<span class="sg-positive">+${t.sg}</span>`;
+            } else if (t.sg < 0) {
+                sgHtml = `<span class="sg-negative">${t.sg}</span>`;
+            }
+
+            const tr = document.createElement('tr');
+            if (t.pos === 1) tr.classList.add('is-leader');
+
+            tr.innerHTML = `
+                <td class="center">
+                    <span class="pos-badge ${classePosicao(t.pos)}">${t.pos}</span>
+                </td>
+                <td>
+                    <div class="club-cell">
+                        <div class="club-avatar">${sigla}</div>
+                        <span class="club-name">${t.nome}</span>
+                    </div>
+                </td>
+                <td class="center"><span class="uf-pill">${t.uf}</span></td>
+                <td><span style="color: var(--text-secondary); font-size: 0.84rem;">${t.regiao}</span></td>
+                <td class="center pts-value">${t.pontos}</td>
+                <td class="center num-val">${t.jogos}</td>
+                <td class="center num-val">${t.vitorias}</td>
+                <td class="center num-val">${t.empates}</td>
+                <td class="center num-val">${t.derrotas}</td>
+                <td class="center num-val">${t.gp}</td>
+                <td class="center num-val">${t.gc}</td>
+                <td class="center">${sgHtml}</td>
+                <td class="right num-val" style="color: var(--text-secondary);">${aproveitamento}%</td>
+            `;
+            corpo.appendChild(tr);
+        });
+        atualizarLucide();
+    }
+
+    function filtrarPorTexto(termo) {
+        const busca = termo.trim().toLowerCase();
+        if (!busca) {
+            renderizarTabelaClubes(dadosAtuaisTimes);
+            return;
+        }
+        const filtrados = dadosAtuaisTimes.filter(t => 
+            t.nome.toLowerCase().includes(busca) ||
+            t.uf.toLowerCase().includes(busca) ||
+            t.regiao.toLowerCase().includes(busca)
+        );
+        renderizarTabelaClubes(filtrados);
+    }
+
+    async function consultarJogadores(categoria) {
+        const erroDiv = document.getElementById('caixaErro');
+        const msgErro = document.getElementById('mensagemErro');
+        const corpo = document.getElementById('corpoJogadores');
+        const colHeader = document.getElementById('colunaEstatistica');
+        const totalTexto = document.getElementById('totalRegistrosTexto');
+
+        erroDiv.style.display = 'none';
+        colHeader.textContent = categoria === 'artilheiros' ? 'Gols Marcados' : 'Assistências';
+        corpo.innerHTML = '<tr class="loading-row"><td colspan="4"><div class="spinner"></div> Consultando ranking no SWI-Prolog...</td></tr>';
+
+        try {
+            const res = await fetch(`/api/jogadores?categoria=${encodeURIComponent(categoria)}`);
+            const json = await res.json();
+
+            if (!json.sucesso) {
+                msgErro.textContent = json.erro;
+                erroDiv.style.display = 'flex';
+                corpo.innerHTML = '<tr class="empty-row"><td colspan="4">Falha ao carregar jogadores.</td></tr>';
+                atualizarLucide();
+                return;
+            }
+
+            setTerminalQuery(json.query_prolog);
+            corpo.innerHTML = '';
+
+            json.dados.forEach(j => {
+                const sigla = siglasClubes[j.clube] || j.clube.substring(0, 3).toUpperCase();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="center">
+                        <span class="pos-badge pos-g6">${j.pos}º</span>
+                    </td>
+                    <td>
+                        <div class="club-cell">
+                            <div class="club-avatar" style="border-radius: 50%; background: rgba(56, 189, 248, 0.1); color: var(--blue);">
+                                <i data-lucide="user" style="width: 16px; height: 16px;"></i>
+                            </div>
+                            <span class="club-name">${j.jogador}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="club-cell">
+                            <span class="uf-pill" style="font-weight: 700;">${sigla}</span>
+                            <span>${j.clube}</span>
+                        </div>
+                    </td>
+                    <td class="right pts-value">${j.valor}</td>
+                `;
+                corpo.appendChild(tr);
+            });
+
+            totalTexto.textContent = `Ranking de ${categoria === 'artilheiros' ? 'Goleadores' : 'Assistências'} atualizado`;
+            atualizarLucide();
+        } catch (err) {
+            msgErro.textContent = 'Erro de comunicação com o servidor Flask.';
+            erroDiv.style.display = 'flex';
+            corpo.innerHTML = '<tr class="empty-row"><td colspan="4">Erro na requisição.</td></tr>';
+            atualizarLucide();
+        }
+    }
+
+    function copiarQuery() {
+        navigator.clipboard.writeText(`?- ${queryAtualTexto}`).then(() => {
+            const btn = document.getElementById('copyText');
+            const icon = document.getElementById('copyIcon');
+            btn.textContent = 'Copiado!';
+            icon.setAttribute('data-lucide', 'check');
+            atualizarLucide();
+            setTimeout(() => {
+                btn.textContent = 'Copiar Query';
+                icon.setAttribute('data-lucide', 'copy');
+                atualizarLucide();
+            }, 2000);
+        });
+    }
+
+    window.onload = () => {
+        verificarInfoMotor();
+        consultarTimes('todos');
+        atualizarLucide();
+    };
+</script>
+
+</body>
+</html>
