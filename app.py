@@ -159,7 +159,8 @@ def api_jogadores():
         return jsonify({"sucesso": False, "erro": str(ex)}), 500
 
 if __name__ == "__main__":
-    print(f"Iniciando servidor Brasileirão 2026...")
+    print(f"Iniciando servidor Brasileirao 2026...")
     print(f"-> SWI-Prolog detectado em: {SWIPL_CMD}")
-    print("-> Acesse no navegador: http://127.0.0.1:5000")
-    app.run(debug=True, port=5000)
+    print("-> Acesso no seu proprio computador (funciona offline): http://127.0.0.1:5000")
+    print("-> Acesso na rede local (outros aparelhos): http://0.0.0.0:5000")
+    app.run(debug=True, host="0.0.0.0", port=5000)
